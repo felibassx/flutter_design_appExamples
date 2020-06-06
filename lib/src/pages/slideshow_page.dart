@@ -8,6 +8,10 @@ class SlideshowPage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Slideshow(
+          pointUp: false,
+          primaryBullet: 15,
+          // primaryColor: Colors.red,
+          // secondaryColor: Colors.grey,
           slides: <Widget>[
             SvgPicture.asset('assets/images/svg/slide-1.svg'),
             SvgPicture.asset('assets/images/svg/slide-2.svg'),
