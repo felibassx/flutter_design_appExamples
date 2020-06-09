@@ -5,54 +5,74 @@ class PinterestButton {
   final Function onPressed;
   final IconData icon;
 
-  PinterestButton({@required this.onPressed, @required this.icon});
+  PinterestButton({ 
+    @required this.onPressed, 
+    @required this.icon 
+  });
 }
 
+
+
 class PinterestMenu extends StatelessWidget {
-  final bool showMenu;
+
+  final bool mostrar;
+  
   final Color backgroundColor;
-  final Color activeColor;
+  final Color activeColor; // black
   final Color inactiveColor;
+
   final List<PinterestButton> items;
 
   PinterestMenu({
-    this.showMenu = true,
+    this.mostrar = true,
     this.backgroundColor = Colors.white,
-    this.activeColor = Colors.black,
-    this.inactiveColor = Colors.blueGrey,
+    this.activeColor     = Colors.black,
+    this.inactiveColor   = Colors.blueGrey,
     @required this.items
   });
 
+
+  // final List<PinterestButton> items = [
+  //   PinterestButton(icon: Icons.pie_chart, onPressed: (){ print('Icon pie_chart'); } ), 
+  //   PinterestButton(icon: Icons.search, onPressed: (){ print('Icon search'); } ), 
+  //   PinterestButton(icon: Icons.notifications, onPressed: (){ print('Icon notifications'); } ), 
+  //   PinterestButton(icon: Icons.supervised_user_circle, onPressed: (){ print('Icon supervised_user_circle'); } ), 
+  // ];
+
+
   @override
   Widget build(BuildContext context) {
-    // _MenuItems(items)
     return ChangeNotifierProvider(
       create: (_) => new _MenuModel(),
       child: AnimatedOpacity(
-          duration: Duration(milliseconds: 250),
-          curve: Curves.bounceOut,
-          opacity: (showMenu) ? 1 : 0,
-          child: Builder(builder: (BuildContext context) {
+        duration: Duration( milliseconds: 250 ),
+        opacity: ( mostrar ) ? 1 : 0,
+        child: Builder(
+          builder: (BuildContext context) {
 
             Provider.of<_MenuModel>(context).backgroundColor = this.backgroundColor;
-            Provider.of<_MenuModel>(context).activeColor = this.activeColor;
-            Provider.of<_MenuModel>(context).inactiveColor = this.inactiveColor;
+            Provider.of<_MenuModel>(context).activeColor     = this.activeColor;
+            Provider.of<_MenuModel>(context).inactiveColor   = this.inactiveColor;
 
-            return _PintrestMenuBackground(
-              child: _MenuItems(items),
+            return _PinterestMenuBackground(
+              child: _MenuItems( items ),
             );
-          })),
+          },
+        ),
+      ),
     );
   }
 }
 
-class _PintrestMenuBackground extends StatelessWidget {
+class _PinterestMenuBackground extends StatelessWidget {
+  
   final Widget child;
 
-  _PintrestMenuBackground({@required this.child});
+  _PinterestMenuBackground({ @required this.child });
 
   @override
   Widget build(BuildContext context) {
+
     Color backgroundColor = Provider.of<_MenuModel>(context).backgroundColor;
 
     return Container(
@@ -60,103 +80,83 @@ class _PintrestMenuBackground extends StatelessWidget {
       width: 250,
       height: 60,
       decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.all(Radius.circular(100)),
-          boxShadow: <BoxShadow>[
-            BoxShadow(color: Colors.black38, blurRadius: 10, spreadRadius: -5)
-          ]),
+        color: backgroundColor,
+        borderRadius: BorderRadius.all( Radius.circular(100) ),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: Colors.black38,
+            blurRadius: 10,
+            spreadRadius: -5
+          )
+        ]
+      ),
     );
   }
 }
 
+
 class _MenuItems extends StatelessWidget {
+  
   final List<PinterestButton> menuItems;
 
-  _MenuItems(this.menuItems);
-
+  _MenuItems( this.menuItems );
+  
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: List.generate(
-          menuItems.length, (i) => _PinterestMenuButton(i, menuItems[i])),
+      children: List.generate( menuItems.length, (i) => _PinterestMenuButton( i, menuItems[i] ) )
     );
   }
 }
 
-class _PinterestMenuButton extends StatefulWidget {
+class _PinterestMenuButton extends StatelessWidget {
+
   final int index;
   final PinterestButton item;
 
-  _PinterestMenuButton(this.index, this.item);
+  _PinterestMenuButton( this.index, this.item );
 
-  @override
-  __PinterestMenuButtonState createState() => __PinterestMenuButtonState();
-}
-
-class __PinterestMenuButtonState extends State<_PinterestMenuButton> {
   @override
   Widget build(BuildContext context) {
-    final itemSelected = Provider.of<_MenuModel>(context).itemSelected;
-    Color colorSelected = Provider.of<_MenuModel>(context).activeColor;
-    double sizeSelected = 30;
 
-    // Button selected set
-    if (itemSelected == widget.index) {
-      colorSelected = Provider.of<_MenuModel>(context).activeColor;
-      sizeSelected = 35;
-    } else {
-      colorSelected = Provider.of<_MenuModel>(context).inactiveColor;
-      sizeSelected = 25;
-    }
+    final itemSeleccionado = Provider.of<_MenuModel>(context).itemSeleccionado;
+
+    final menuModel = Provider.of<_MenuModel>(context);
 
     return GestureDetector(
-      onTap: () {
-        Provider.of<_MenuModel>(context, listen: false).itemSelected =
-            widget.index;
-        widget.item.onPressed();
+      onTap: (){
+        Provider.of<_MenuModel>(context, listen: false ).itemSeleccionado = index;
+        item.onPressed();
       },
       behavior: HitTestBehavior.translucent,
       child: Container(
-        child: Icon(
-          widget.item.icon,
-          size: sizeSelected,
-          color: colorSelected,
+        child: Icon( 
+          item.icon,
+          size: ( itemSeleccionado == index ) ? 35 : 25,
+          color: ( itemSeleccionado == index ) ? menuModel.activeColor : menuModel.inactiveColor,
         ),
       ),
     );
   }
 }
 
-// Provider Pattern
+
+
 class _MenuModel with ChangeNotifier {
-  int _itemSelected = 0;
-  Color _backgroundColor = Colors.white;
-  Color _activeColor = Colors.black;
-  Color _inactiveColor = Colors.blueGrey;
 
-  int get itemSelected => this._itemSelected;
+  int _itemSeleccionado = 0;
 
-  set itemSelected(int index) {
-    this._itemSelected = index;
+  Color backgroundColor = Colors.white;
+  Color activeColor     = Colors.black;
+  Color inactiveColor   = Colors.blueGrey;
+
+
+  int get itemSeleccionado => this._itemSeleccionado;
+
+  set itemSeleccionado( int index ) {
+    this._itemSeleccionado = index;
     notifyListeners();
   }
 
-  Color get backgroundColor => this._backgroundColor;
-  set backgroundColor(Color value) {
-    this._backgroundColor = value;
-    notifyListeners();
-  }
-
-  Color get activeColor => this._activeColor;
-  set activeColor(Color value) {
-    this._activeColor = value;
-    notifyListeners();
-  }
-
-  Color get inactiveColor => this._inactiveColor;
-  set inactiveColor(Color value) {
-    this._inactiveColor = value;
-    notifyListeners();
-  }
 }

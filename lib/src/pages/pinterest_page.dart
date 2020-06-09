@@ -1,111 +1,114 @@
-import 'package:disenos_app/src/widgets/pinterest_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+
 import 'package:provider/provider.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+
+import 'package:disenos_app/src/widgets/pinterest_menu.dart';
+
 
 class PinterestPage extends StatelessWidget {
+
+  
+
   @override
   Widget build(BuildContext context) {
+
     return ChangeNotifierProvider(
       create: (_) => new _MenuModel(),
       child: Scaffold(
-        // body: PinterestGrid(),
         // body: PinterestMenu(),
+        // body: PinterestGrid(),
         body: Stack(
-          children: <Widget>[_PinterestGrid(), _PinterestMenuLocation()],
+          children: <Widget>[
+            PinterestGrid(),
+            _PinterestMenuLocation(),
+          ],
         ),
-      ),
+   ),
     );
   }
 }
 
 class _PinterestMenuLocation extends StatelessWidget {
+
+
   @override
   Widget build(BuildContext context) {
-    final double widthScreen = MediaQuery.of(context).size.width;
-    final bool showMenu = Provider.of<_MenuModel>(context).show;
+
+    final widthPantalla = MediaQuery.of(context).size.width;
+
+    final mostrar = Provider.of<_MenuModel>(context).mostrar;
 
     return Positioned(
+      bottom: 30,
       child: Container(
-        width: widthScreen,
+        width: widthPantalla,
         child: Align(
           child: PinterestMenu(
-            showMenu: showMenu,
-            activeColor: Colors.blue,
-            inactiveColor: Colors.blueGrey,
-            backgroundColor: Colors.white,
+            mostrar: mostrar,
+            // backgroundColor: Colors.red,
+            // activeColor: Colors.red,
+            // inactiveColor: Colors.blue,
             items: [
-              PinterestButton(
-                  icon: Icons.pie_chart,
-                  onPressed: () {
-                    print('icon_pie_chart');
-                  }),
-              PinterestButton(
-                  icon: Icons.search,
-                  onPressed: () {
-                    print('icon_search');
-                  }),
-              PinterestButton(
-                  icon: Icons.notifications,
-                  onPressed: () {
-                    print('icon_notifications');
-                  }),
-              PinterestButton(
-                  icon: Icons.supervised_user_circle,
-                  onPressed: () {
-                    print('icon_supervised_user_circle');
-                  }),
-              
+              PinterestButton(icon: Icons.pie_chart, onPressed: (){ print('Icon pie_chart'); } ), 
+              PinterestButton(icon: Icons.search, onPressed: (){ print('Icon search'); } ), 
+              PinterestButton(icon: Icons.notifications, onPressed: (){ print('Icon notifications'); } ), 
+              PinterestButton(icon: Icons.supervised_user_circle, onPressed: (){ print('Icon supervised_user_circle'); } ), 
             ],
           ),
         ),
-      ),
-      bottom: 40,
+      )
     );
   }
 }
 
-class _PinterestGrid extends StatefulWidget {
+
+class PinterestGrid extends StatefulWidget {
+  
   @override
-  __PinterestGridState createState() => __PinterestGridState();
+  _PinterestGridState createState() => _PinterestGridState();
 }
 
-class __PinterestGridState extends State<_PinterestGrid> {
-  final List<int> items = List.generate(200, (i) => i);
-  ScrollController scrollController = new ScrollController();
-  double scrollBefore = 0.0;
+class _PinterestGridState extends State<PinterestGrid> {
+
+  final List<int> items = List.generate(200, (i) => i );
+  ScrollController controller = new ScrollController();
+  double scrollAnterior = 0;
 
   @override
   void initState() {
-    scrollController.addListener(() {
-      if (scrollController.offset > scrollBefore) {
-        Provider.of<_MenuModel>(context, listen: false).show = false;
+    
+    controller.addListener(() {
+
+      if ( controller.offset > scrollAnterior && controller.offset > 150 ) {
+        Provider.of<_MenuModel>(context, listen: false ).mostrar = false;
       } else {
-        Provider.of<_MenuModel>(context, listen: false).show = true;
+        Provider.of<_MenuModel>(context, listen: false ).mostrar = true;
       }
 
-      scrollBefore =
-          (scrollController.offset < 0) ? 0 : scrollController.offset;
+      scrollAnterior = controller.offset;
 
-      // print('ScrollController ${scrollController.offset}');
     });
+
 
     super.initState();
   }
 
   @override
   void dispose() {
-    scrollController.dispose();
+    controller.dispose();
     super.dispose();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
-    return StaggeredGridView.countBuilder(
-      controller: scrollController,
+    return new StaggeredGridView.countBuilder(
+      controller: controller,
       crossAxisCount: 4,
       itemCount: items.length,
-      itemBuilder: (BuildContext context, int index) => _PintrestItem(index),
+      itemBuilder: (BuildContext context, int index) => _PinterestItem( index ),
       staggeredTileBuilder: (int index) =>
           new StaggeredTile.count(2, index.isEven ? 2 : 3),
       mainAxisSpacing: 4.0,
@@ -114,18 +117,20 @@ class __PinterestGridState extends State<_PinterestGrid> {
   }
 }
 
-class _PintrestItem extends StatelessWidget {
+class _PinterestItem extends StatelessWidget {
+
   final int index;
 
-  const _PintrestItem(this.index);
+  _PinterestItem( this.index );
 
   @override
   Widget build(BuildContext context) {
     return new Container(
         margin: EdgeInsets.all(5),
         decoration: BoxDecoration(
-            color: Colors.blue,
-            borderRadius: BorderRadius.all(Radius.circular(20))),
+          color: Colors.blue,
+          borderRadius: BorderRadius.all( Radius.circular(30) )
+        ),
         child: new Center(
           child: new CircleAvatar(
             backgroundColor: Colors.white,
@@ -135,13 +140,18 @@ class _PintrestItem extends StatelessWidget {
   }
 }
 
-// Provider Pattern
-class _MenuModel with ChangeNotifier {
-  bool _show = true;
 
-  bool get show => this._show;
-  set show(bool value) {
-    this._show = value;
+
+class _MenuModel with ChangeNotifier {
+
+  bool _mostrar = true;
+
+  bool get mostrar => this._mostrar;
+
+  set mostrar( bool valor ) {
+    this._mostrar = valor;
     notifyListeners();
   }
+
+
 }
