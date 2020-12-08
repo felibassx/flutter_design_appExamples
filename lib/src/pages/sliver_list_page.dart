@@ -8,12 +8,12 @@ class SliverListPage extends StatelessWidget {
       // body: _ListaTareas(),
       body: Stack(
         children: <Widget>[
-           _MainScroll(),
-           Positioned(
-             child: _BottonNewList(),
-             bottom: -10,
-             right: 0,
-            ),
+          _MainScroll(),
+          Positioned(
+            child: _BottonNewList(),
+            bottom: -10,
+            right: 0,
+          ),
         ],
       ),
     );
@@ -21,10 +21,8 @@ class SliverListPage extends StatelessWidget {
 }
 
 class _BottonNewList extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-
     final Size size = MediaQuery.of(context).size;
 
     return Container(
@@ -34,17 +32,15 @@ class _BottonNewList extends StatelessWidget {
         child: RaisedButton(
           color: Color(0xffed6762),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(50))
-          ),
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(50))),
           onPressed: () {},
           child: Text(
             'CREATE NEW LIST',
             style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 3
-            ),
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 3),
           ),
         ),
       ),
@@ -76,20 +72,21 @@ class _MainScroll extends StatelessWidget {
         SliverPersistentHeader(
           floating: true,
           delegate: _SliverCustomHeaderDelegate(
-            minHeight: 170,
-            maxHeight: 200,
-            child: Container(
-              alignment: Alignment.centerLeft,
-              child: _Titulo(),
-              color: Colors.white,
-            )
-          ),
+              minHeight: 170,
+              maxHeight: 200,
+              child: Container(
+                alignment: Alignment.centerLeft,
+                child: _Titulo(),
+                color: Colors.white,
+              )),
         ),
 
         SliverList(
           delegate: SliverChildListDelegate([
             ...items,
-            SizedBox(height: 100,)
+            SizedBox(
+              height: 100,
+            )
           ]),
         )
       ],
@@ -98,22 +95,21 @@ class _MainScroll extends StatelessWidget {
 }
 
 class _SliverCustomHeaderDelegate extends SliverPersistentHeaderDelegate {
-
   final double minHeight;
   final double maxHeight;
   final Widget child;
 
-
-_SliverCustomHeaderDelegate({
-  @required this.minHeight, 
-  @required this.maxHeight, 
-  @required this.child
-});
+  _SliverCustomHeaderDelegate(
+      {@required this.minHeight,
+      @required this.maxHeight,
+      @required this.child});
 
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return SizedBox.expand(child: child,);
+    return SizedBox.expand(
+      child: child,
+    );
   }
 
   @override
@@ -124,9 +120,9 @@ _SliverCustomHeaderDelegate({
 
   @override
   bool shouldRebuild(_SliverCustomHeaderDelegate oldDelegate) {
-    return  maxHeight != oldDelegate.maxHeight ||
-            minHeight != oldDelegate.minHeight ||
-            child != oldDelegate.child;
+    return maxHeight != oldDelegate.maxHeight ||
+        minHeight != oldDelegate.minHeight ||
+        child != oldDelegate.child;
   }
 }
 
@@ -176,25 +172,25 @@ class _Titulo extends StatelessWidget {
   }
 }
 
-class _ListaTareas extends StatelessWidget {
-  final items = [
-    _ListItem('Orange', Color(0xffF08F66)),
-    _ListItem('Family', Color(0xffF2A38A)),
-    _ListItem('Subscriptions', Color(0xffF7CDD5)),
-    _ListItem('Books', Color(0xffFCEBAF)),
-    _ListItem('Orange', Color(0xffF08F66)),
-    _ListItem('Family', Color(0xffF2A38A)),
-    _ListItem('Subscriptions', Color(0xffF7CDD5)),
-    _ListItem('Books', Color(0xffFCEBAF)),
-  ];
+// class _ListaTareas extends StatelessWidget {
+//   final items = [
+//     _ListItem('Orange', Color(0xffF08F66)),
+//     _ListItem('Family', Color(0xffF2A38A)),
+//     _ListItem('Subscriptions', Color(0xffF7CDD5)),
+//     _ListItem('Books', Color(0xffFCEBAF)),
+//     _ListItem('Orange', Color(0xffF08F66)),
+//     _ListItem('Family', Color(0xffF2A38A)),
+//     _ListItem('Subscriptions', Color(0xffF7CDD5)),
+//     _ListItem('Books', Color(0xffFCEBAF)),
+//   ];
 
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: items.length,
-        itemBuilder: (BuildContext context, int index) => items[index]);
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return ListView.builder(
+//         itemCount: items.length,
+//         itemBuilder: (BuildContext context, int index) => items[index]);
+//   }
+// }
 
 class _ListItem extends StatelessWidget {
   final String titulo;

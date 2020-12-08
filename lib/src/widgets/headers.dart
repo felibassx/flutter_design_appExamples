@@ -229,7 +229,9 @@ class _HeaderCurvoPainter extends CustomPainter {
 
 ////////HeaderWave//////////////////////////////////////////////////////////////////////////////////////////////
 class HeaderWave extends StatelessWidget {
-  const HeaderWave({Key key}) : super(key: key);
+  const HeaderWave({Key key, @required this.color}) : super(key: key);
+
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -238,19 +240,23 @@ class HeaderWave extends StatelessWidget {
       width: double.infinity,
       child: CustomPaint(
         // utilización del CustomPaint
-        painter: _HeaderWavePainter(),
+        painter: _HeaderWavePainter(this.color),
       ),
     );
   }
 }
 
 class _HeaderWavePainter extends CustomPainter {
+  final Color color;
+
+  _HeaderWavePainter(this.color);
+
   @override
   void paint(Canvas canvas, Size size) {
     // Primero creamos una variable de tipo Paint
     // Qué es el Paint?, El Paint es el lapiz que utilizaremos para dibujar
     final lapiz = Paint();
-    lapiz.color = Color(0xff6638f0);
+    lapiz.color = this.color;
     lapiz.style = PaintingStyle
         .fill; // .fill: estodo el relleno y .stroke: es solo los bordes
     lapiz.strokeWidth = 20; // strokeWidth es el ancho del lapiz
@@ -360,13 +366,12 @@ class IconHeaderWidget extends StatelessWidget {
   final Color color1;
   final Color color2;
 
-  const IconHeaderWidget({
-    @required this.icon, 
-    @required this.title, 
-    @required this.subTitle, 
-    this.color1 = Colors.blue, 
-    this.color2 = Colors.blueGrey
-  });
+  const IconHeaderWidget(
+      {@required this.icon,
+      @required this.title,
+      @required this.subTitle,
+      this.color1 = Colors.blue,
+      this.color2 = Colors.blueGrey});
 
   @override
   Widget build(BuildContext context) {
@@ -417,14 +422,10 @@ class IconHeaderWidget extends StatelessWidget {
 }
 
 class _IconHeaderBackground extends StatelessWidget {
-  
   final Color color1;
   final Color color2;
 
-  const _IconHeaderBackground(
-    this.color1, 
-    this.color2
-  );
+  const _IconHeaderBackground(this.color1, this.color2);
 
   @override
   Widget build(BuildContext context) {
